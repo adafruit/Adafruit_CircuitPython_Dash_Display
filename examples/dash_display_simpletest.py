@@ -37,8 +37,8 @@ except ImportError:
     raise
 
 
-def rgb_set_color(label, message, index):  # pylint: disable=unused-argument
-    label.color = int(message[1:], 16)
+def rgb_set_color(message):  # pylint: disable=unused-argument
+    return int(message[1:], 16)
 
 
 rgb_group = displayio.Group(max_size=9)
@@ -102,21 +102,23 @@ rgb_group.append(B)
 
 def rgb(last):
     display.show(None)
-    time.sleep(0.5)
+    rgb_group[3].text = "00"
+    rgb_group[4].text = "00"
+    rgb_group[5].text = "00"
     display.show(rgb_group)
-    time.sleep(0.5)
+    time.sleep(0.2)
     index = 0
     colors = [00, 00, 00]
 
     while True:
-        if select:
+        if select.value:
             index += 1
             if index == 3:
                 index = 0
             time.sleep(0.3)
             continue
 
-        if up:
+        if up.value:
             colors[index] += 1
             if colors[index] == 256:
                 colors[index] = 0
@@ -124,7 +126,7 @@ def rgb(last):
             time.sleep(0.01)
             continue
 
-        if down:
+        if down.value:
             colors[index] -= 1
             if colors[index] == -1:
                 colors[index] = 255
@@ -132,20 +134,18 @@ def rgb(last):
             time.sleep(0.01)
             continue
 
-        if submit:
+        if submit.value:
             color = ["{:02x}".format(colors[i]) for i in range(len(colors))]
             color = "#" + "".join(color)
             iot.publish("neopixel", color)
             break
 
-        if back:
+        if back.value:
             break
         time.sleep(0.1)
 
     display.show(None)
-    time.sleep(0.5)
-    # display.show(funhouse.splash)
-    display.refresh()
+    time.sleep(0.1)
 
 
 display = board.DISPLAY
@@ -177,14 +177,13 @@ io = IO_MQTT(mqtt_client)
 
 
 def pub_lamp(lamp):
-    lamp = eval(lamp)  # pylint: disable=eval-used
+    if type(lamp) == str:
+        lamp = eval(lamp)  # pylint: disable=eval-used
     iot.publish("lamp", str(not lamp))
     # funhouse.set_text(f"Lamp: {not lamp}", 0)
     time.sleep(0.3)
 
 
-print(type(board.DISPLAY))
-print(type(display))
 iot = Hub(display=display, io=io, nav=(up, select, down, back, submit))
 
 iot.add_device(
@@ -215,6 +214,11 @@ iot.add_device(
 )
 
 iot.get()
+# io.get('lamp')
+# io.get('temperature')
+# io.get('humidity')
+# io.get('neopiexl')
+# io.get('battery')
 
 while True:
     iot.loop()

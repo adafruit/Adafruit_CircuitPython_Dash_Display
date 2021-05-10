@@ -23,6 +23,7 @@ Implementation Notes
 
 """
 
+import time
 from collections import OrderedDict
 from adafruit_display_shapes.rect import Rect
 from adafruit_display_text.label import Label
@@ -121,13 +122,13 @@ class Hub:  # pylint: disable=too-many-instance-attributes
         self.up_btn, self.select, self.down, self.back, self.submit = nav
 
         self.length = 0
-        self.selected = 0
+        self.selected = 1
 
         self.feeds = OrderedDict()
 
-        self.io._on_mqtt_connect = self.connected
-        self.io._on_mqtt_disconnect = self.disconnected
-        self.io._on_mqtt_subscribe = self.subscribe
+        self.io.on_mqtt_connect = self.connected
+        self.io.on_mqtt_disconnect = self.disconnected
+        self.io.on_mqtt_subscribe = self.subscribe
         self.io.on_message = self.message
 
         print("Connecting to Adafruit IO...")
@@ -147,21 +148,23 @@ class Hub:  # pylint: disable=too-many-instance-attributes
     ):  # pylint: disable=unused-argument
         """Default callback function that uses the text in the Feed object and the color callback
         to set the text"""
+        feed_id = feed_id.split("/")[-1]
         feed = self.feeds[feed_id]
         index = feed.index
         try:
-            self.splash[index].text = feed.text.format(message)
+            text = feed.text.format(message)
         except ValueError:
-            self.splash[index].text = feed.text.format(float(message))
+            text = feed.text.format(float(message))
         if feed.color:
-            feed.color(self.splash[index], message, self.selected)
+            self.splash[index + 1].color = feed.color(message)
         feed.last_val = message
+        return text
 
     def update_text(self, client, feed_id, message):
         """ Updates the text on the display """
         feed = self.feeds[feed_id]
-        index = feed.index
-        self.splash[index].text = feed.callback(client, feed_id, message)
+        feed.callback(client, feed_id, message)
+        self.splash[feed.index + 1].text = feed.callback(client, feed_id, str(message))
 
     def base_pub(self, var):
         """ Default function called when a feed is published to """
@@ -183,13 +186,18 @@ class Hub:  # pylint: disable=too-many-instance-attributes
         if not formatted_text:
             formatted_text = f"{feed_key} : "
             formatted_text = formatted_text + "{}"
+        if not default_text:
+            default_text = feed_key
 
         self.io.subscribe(feed_key)
-        if len(self.splash) == 2:
+        # self.io.add_feed_callback(feed_key, callback)
+        if len(self.splash) == 1:
             self.splash.append(
                 Label(
                     font=terminalio.FONT,
                     text=default_text,
+                    x=3,
+                    y=15,
                     anchored_position=(3, 15),
                     scale=2,
                     color=0x000000,
@@ -199,6 +207,8 @@ class Hub:  # pylint: disable=too-many-instance-attributes
             self.splash.append(
                 Label(
                     font=terminalio.FONT,
+                    x=3,
+                    y=((len(self.splash) - 1) * 30) + 15,
                     text=default_text,
                     color=0xFFFFFF,
                     anchored_position=(3, ((len(self.splash) - 2) * 30) + 15),
@@ -219,7 +229,10 @@ class Hub:  # pylint: disable=too-many-instance-attributes
     def get(self):
         """ Gets all the subscribed feeds """
         for feed in self.feeds.keys():
+            print(f"getting {feed}")
             self.io.get(feed)
+            time.sleep(0.1)
+        self.io.loop()
 
     # pylint: disable=unused-argument
     @staticmethod
@@ -240,9 +253,10 @@ class Hub:  # pylint: disable=too-many-instance-attributes
     def message(self, client, feed_id, message):
         """ Callback for whenever a new message is received """
         print("Feed {0} received new value: {1}".format(feed_id, message))
+        feed_id = feed_id.split("/")[-1]
         feed = self.feeds[feed_id]
         feed.last_val = message
-        self.update_text(client, feed_id, message)
+        self.update_text(client, feed_id, str(message))
 
     def publish(self, feed, message):
         """ Callback for publishing a message """
@@ -252,15 +266,15 @@ class Hub:  # pylint: disable=too-many-instance-attributes
     def loop(self):
         """ Loops Adafruit IO and also checks to see if any buttons have been pressed """
         self.io.loop()
-        if self.select:
-            feed = self.feeds[self.feeds.keys()[self.selected]]
+        if self.select.value:
+            feed = self.feeds[list(self.feeds.keys())[self.selected - 1]]
             if feed.pub:
-                print(feed.last_val)
-                feed.pub(feed.last_val[self.selected])
-            while self.select:
+                feed.pub(feed.last_val)
+                self.display.show(self.splash)
+            while self.select.value:
                 pass
 
-        if self.down and self.selected + 1 < self.length:
+        if self.down.value and self.selected < self.length + 1:
             rgb = self.splash[self.selected].color
             color = (
                 ((255 - ((rgb >> 16) & 0xFF)) << 16)
@@ -280,7 +294,7 @@ class Hub:  # pylint: disable=too-many-instance-attributes
             )
             self.splash[self.selected].color = color
 
-        if self.up_btn and self.selected > 0:
+        if self.up_btn.value and self.selected > 1:
             rgb = self.splash[self.selected].color
             color = (
                 ((255 - ((rgb >> 16) & 0xFF)) << 16)
