@@ -2,16 +2,14 @@
 # SPDX-License-Identifier: MIT
 
 import time
+import math
 import board
 import busio
-from digitalio import DigitalInOut, Direction, Pull
-from analogio import AnalogIn
-from adafruit_debouncer import Debouncer
+from digitalio import DigitalInOut
 import displayio
 from adafruit_display_shapes.rect import Rect
 import adafruit_imageload
 import adafruit_touchscreen
-import math
 
 # ESP32 SPI
 from adafruit_esp32spi import adafruit_esp32spi, adafruit_esp32spi_wifimanager

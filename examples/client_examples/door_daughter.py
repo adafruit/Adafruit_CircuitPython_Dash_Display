@@ -5,7 +5,6 @@ import time
 import board
 import busio
 from digitalio import DigitalInOut, Direction, Pull
-from analogio import AnalogIn
 from adafruit_debouncer import Debouncer
 import displayio
 from adafruit_display_shapes.circle import Circle

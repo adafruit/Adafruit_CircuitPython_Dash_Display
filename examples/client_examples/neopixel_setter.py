@@ -4,7 +4,6 @@
 import time
 from adafruit_funhouse import FunHouse
 from adafruit_display_shapes.rect import Rect
-import math
 
 funhouse = FunHouse(default_bg=None)
 

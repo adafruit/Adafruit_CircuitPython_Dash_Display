@@ -3,14 +3,13 @@
 
 import board
 import busio
-from digitalio import DigitalInOut
 from adafruit_esp32spi import adafruit_esp32spi
 from adafruit_esp32spi import adafruit_esp32spi_wifimanager
 import adafruit_esp32spi.adafruit_esp32spi_socket as socket
 import neopixel
 import adafruit_minimqtt.adafruit_minimqtt as MQTT
 from adafruit_io.adafruit_io import IO_MQTT
-from digitalio import DigitalInOut, Direction
+from digitalio import DigitalInOut
 
 ### WiFi ###
 

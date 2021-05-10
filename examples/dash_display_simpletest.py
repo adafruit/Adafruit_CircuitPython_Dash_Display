@@ -30,8 +30,6 @@ down.pull = Pull.DOWN
 back = touchio.TouchIn(board.CAP7)
 submit = touchio.TouchIn(board.CAP8)
 
-lamp = None
-
 try:
     from secrets import secrets
 except ImportError:
@@ -39,7 +37,7 @@ except ImportError:
     raise
 
 
-def rgb_set_color(label, message, index):
+def rgb_set_color(label, message, index):  # pylint: disable=unused-argument
     label.color = int(message[1:], 16)
 
 
@@ -100,32 +98,6 @@ rgb_group.append(G)
 rgb_group.append(B)
 
 # pylint: disable=unused-argument
-
-
-def on_temperature(client, feed_id, message):
-    funhouse.set_text(f"Temperature: {float(message):.1f} C", 1)
-
-
-def on_neopixel(client, feed_id, message):
-    funhouse.set_text(f"LED: {message}", 3)
-    funhouse.set_text_color(int(message[1:], 16), 3)
-
-
-def on_battery(client, feed_id, message):
-    funhouse.set_text(f"Battery: {message}%", 4)
-    if int(message) <= 20:
-        funhouse.set_text_color(0xFF0000, 4)
-    else:
-        funhouse.set_text_color(0x00FF00, 4)
-
-
-def on_door(client, feed_id, message):
-    if int(message):
-        funhouse.set_text("Door closed", 5)
-        funhouse.set_text_color(0x00FF00, 5)
-    else:
-        funhouse.set_text("Door open", 5)
-        funhouse.set_text_color(0xFF0000, 5)
 
 
 def rgb(last):
@@ -205,7 +177,7 @@ io = IO_MQTT(mqtt_client)
 
 
 def pub_lamp(lamp):
-    lamp = eval(lamp)
+    lamp = eval(lamp)  # pylint: disable=eval-used
     iot.publish("lamp", str(not lamp))
     # funhouse.set_text(f"Lamp: {not lamp}", 0)
     time.sleep(0.3)
