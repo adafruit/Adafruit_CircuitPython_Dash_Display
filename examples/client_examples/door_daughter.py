@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Dylan Herrada for Adafruit Industries
+# SPDX-License-Identifier: MIT
+
 import time
 import board
 import busio

@@ -102,14 +102,6 @@ rgb_group.append(B)
 # pylint: disable=unused-argument
 
 
-def on_lamp(client, feed_id, message):
-    funhouse.set_text(f"Lamp: {message}", 0)
-
-
-def on_humidity(client, feed_id, message):
-    funhouse.set_text(f"Humidity: {float(message):.2f}%", 2)
-
-
 def on_temperature(client, feed_id, message):
     funhouse.set_text(f"Temperature: {float(message):.1f} C", 1)
 
@@ -241,16 +233,14 @@ iot.add_device(
     feed_key="neopixel",
     default_text="LED: ",
     formatted_text="LED: {}",
-    callback=on_neopixel,
+    color_callback=rgb_set_color,
     pub_method=rgb,
 )
 iot.add_device(
     feed_key="battery",
     default_text="Battery: ",
     formatted_text="Battery: {}%",
-    color_callback=rgb_set_color,
 )
-# Hub.add_device("door", "Door ", "Door {}", on_door)
 
 iot.get()
 

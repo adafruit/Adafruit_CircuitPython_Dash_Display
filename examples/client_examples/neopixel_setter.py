@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Dylan Herrada for Adafruit Industries
+# SPDX-License-Identifier: MIT
+
 import time
 from adafruit_funhouse import FunHouse
 from adafruit_display_shapes.rect import Rect

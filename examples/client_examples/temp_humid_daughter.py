@@ -1,7 +1,5 @@
-# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+# SPDX-FileCopyrightText: 2021 Dylan Herrada for Adafruit Industries
 # SPDX-License-Identifier: MIT
-import time
-from random import randint
 
 import ssl
 import socketpool
@@ -69,15 +67,27 @@ try:
     print("Current mode is: ", adafruit_sht4x.Mode.string[sht.mode])
 
     magtag.add_text(
-        text_position=(50, 128 / 4,), text_scale=2,
+        text_position=(
+            50,
+            128 / 4,
+        ),
+        text_scale=2,
     )
 
     magtag.add_text(
-        text_position=(50, (2 * 128) / 4,), text_scale=2,
+        text_position=(
+            50,
+            (2 * 128) / 4,
+        ),
+        text_scale=2,
     )
 
     magtag.add_text(
-        text_position=(50, (3 * 128) / 4,), text_scale=2,
+        text_position=(
+            50,
+            (3 * 128) / 4,
+        ),
+        text_scale=2,
     )
 
     temperature, relative_humidity = sht.measurements
@@ -113,11 +123,19 @@ except ConnectionError:
     print("Current mode is: ", adafruit_sht4x.Mode.string[sht.mode])
 
     magtag.add_text(
-        text_position=(50, 128 / 4,), text_scale=2,
+        text_position=(
+            50,
+            128 / 4,
+        ),
+        text_scale=2,
     )
 
     magtag.add_text(
-        text_position=(50, (3 * 128) / 4,), text_scale=2,
+        text_position=(
+            50,
+            (3 * 128) / 4,
+        ),
+        text_scale=2,
     )
 
     temperature, relative_humidity = sht.measurements

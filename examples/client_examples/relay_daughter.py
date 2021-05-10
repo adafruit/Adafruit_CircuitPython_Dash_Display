@@ -1,6 +1,8 @@
+# SPDX-FileCopyrightText: 2021 Dylan Herrada for Adafruit Industries
+# SPDX-License-Identifier: MIT
+
 import board
 import busio
-from digitalio import DigitalInOut
 from adafruit_esp32spi import adafruit_esp32spi
 from adafruit_esp32spi import adafruit_esp32spi_wifimanager
 import adafruit_esp32spi.adafruit_esp32spi_socket as socket
@@ -46,7 +48,7 @@ def subscribe(client, userdata, topic, granted_qos):
 
 
 def on_lamp(client, topic, message):
-    RELAY.value = eval(message)
+    RELAY.value = eval(message)  # pylint: disable=eval-used
 
 
 # Connect to WiFi

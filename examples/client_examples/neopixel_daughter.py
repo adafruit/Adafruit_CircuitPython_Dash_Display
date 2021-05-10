@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 Dylan Herrada for Adafruit Industries
+# SPDX-License-Identifier: MIT
+
 import board
 import busio
 from digitalio import DigitalInOut

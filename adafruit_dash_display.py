@@ -145,8 +145,8 @@ class Hub:  # pylint: disable=too-many-instance-attributes
     def simple_text_callback(
         self, client, feed_id, message
     ):  # pylint: disable=unused-argument
-        """ Default callback function that uses the text in the Feed object and the color callback
-        to set the text """
+        """Default callback function that uses the text in the Feed object and the color callback
+        to set the text"""
         feed = self.feeds[feed_id]
         index = feed.index
         try:
