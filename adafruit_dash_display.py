@@ -14,7 +14,7 @@ Implementation Notes
 **Hardware:**
 
 * This library currently only officially supports the
-  `Adafruit Funhouse <https://www.adafruit.com/product/4985>` but other boards are coming soon.
+  `Adafruit Funhouse <https://www.adafruit.com/product/4985>`_ but other boards are coming soon.
 
 **Software and Dependencies:**
 
