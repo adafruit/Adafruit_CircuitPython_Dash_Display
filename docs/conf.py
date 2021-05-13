@@ -34,7 +34,6 @@ autodoc_mock_imports = [
     "busio",
 ]
 
-
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3.4", None),
     "CircuitPython": ("https://circuitpython.readthedocs.io/en/latest/", None),
