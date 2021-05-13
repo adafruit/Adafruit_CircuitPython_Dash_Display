@@ -3,11 +3,8 @@
 
 import time
 import ssl
-import displayio
 import board
 from digitalio import DigitalInOut, Direction, Pull
-from adafruit_display_text.label import Label
-import terminalio
 import touchio
 import socketpool
 import wifi
@@ -35,118 +32,6 @@ try:
 except ImportError:
     print("WiFi secrets are kept in secrets.py, please add them there!")
     raise
-
-
-def rgb_set_color(message):  # pylint: disable=unused-argument
-    return int(message[1:], 16)
-
-
-rgb_group = displayio.Group(max_size=9)
-R_label = Label(
-    terminalio.FONT,
-    text="   +\nR:\n   -",
-    color=0xFFFFFF,
-    anchor_point=((0, 0.5)),
-    anchored_position=((5, 120)),
-    scale=2,
-)
-G_label = Label(
-    terminalio.FONT,
-    text="   +\nG:\n   -",
-    color=0xFFFFFF,
-    anchor_point=((0, 0.5)),
-    anchored_position=((90, 120)),
-    scale=2,
-)
-B_label = Label(
-    terminalio.FONT,
-    text="   +\nB:\n   -",
-    color=0xFFFFFF,
-    anchor_point=((0, 0.5)),
-    anchored_position=((175, 120)),
-    scale=2,
-)
-rgb_group.append(R_label)
-rgb_group.append(G_label)
-rgb_group.append(B_label)
-R = Label(
-    terminalio.FONT,
-    text="00",
-    color=0xFFFFFF,
-    anchor_point=((0, 0.5)),
-    anchored_position=((35, 120)),
-    scale=2,
-)
-G = Label(
-    terminalio.FONT,
-    text="00",
-    color=0xFFFFFF,
-    anchor_point=((0, 0.5)),
-    anchored_position=((120, 120)),
-    scale=2,
-)
-B = Label(
-    terminalio.FONT,
-    text="00",
-    color=0xFFFFFF,
-    anchor_point=((0, 0.5)),
-    anchored_position=((205, 120)),
-    scale=2,
-)
-rgb_group.append(R)
-rgb_group.append(G)
-rgb_group.append(B)
-
-# pylint: disable=unused-argument
-
-
-def rgb(last):
-    display.show(None)
-    rgb_group[3].text = "00"
-    rgb_group[4].text = "00"
-    rgb_group[5].text = "00"
-    display.show(rgb_group)
-    time.sleep(0.2)
-    index = 0
-    colors = [00, 00, 00]
-
-    while True:
-        if select.value:
-            index += 1
-            if index == 3:
-                index = 0
-            time.sleep(0.3)
-            continue
-
-        if up.value:
-            colors[index] += 1
-            if colors[index] == 256:
-                colors[index] = 0
-            rgb_group[index + 3].text = hex(colors[index])[2:]
-            time.sleep(0.01)
-            continue
-
-        if down.value:
-            colors[index] -= 1
-            if colors[index] == -1:
-                colors[index] = 255
-            rgb_group[index + 3].text = hex(colors[index])[2:]
-            time.sleep(0.01)
-            continue
-
-        if submit.value:
-            color = ["{:02x}".format(colors[i]) for i in range(len(colors))]
-            color = "#" + "".join(color)
-            iot.publish("neopixel", color)
-            break
-
-        if back.value:
-            break
-        time.sleep(0.1)
-
-    display.show(None)
-    time.sleep(0.1)
-
 
 display = board.DISPLAY
 
@@ -177,7 +62,7 @@ io = IO_MQTT(mqtt_client)
 
 
 def pub_lamp(lamp):
-    if type(lamp) == str:
+    if isinstance(lamp, str):
         lamp = eval(lamp)  # pylint: disable=eval-used
     iot.publish("lamp", str(not lamp))
     # funhouse.set_text(f"Lamp: {not lamp}", 0)
@@ -200,25 +85,8 @@ iot.add_device(
 iot.add_device(
     feed_key="humidity", default_text="Humidity: ", formatted_text="Humidity: {:.2f}%"
 )
-iot.add_device(
-    feed_key="neopixel",
-    default_text="LED: ",
-    formatted_text="LED: {}",
-    color_callback=rgb_set_color,
-    pub_method=rgb,
-)
-iot.add_device(
-    feed_key="battery",
-    default_text="Battery: ",
-    formatted_text="Battery: {}%",
-)
 
 iot.get()
-# io.get('lamp')
-# io.get('temperature')
-# io.get('humidity')
-# io.get('neopiexl')
-# io.get('battery')
 
 while True:
     iot.loop()

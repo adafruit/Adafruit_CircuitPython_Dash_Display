@@ -1,9 +1,9 @@
-# SPDX-FileCopyrightText: 2017 Scott Shawcroft, written for Adafruit Industries
 # SPDX-FileCopyrightText: Copyright (c) 2021 Dylan Herrada for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
+
 """
-`adafruit_dash_display
+`adafruit_dash_display`
 ================================================================================
 CircuitPython library for creating Adafruit IO dashboards.
 
@@ -14,7 +14,7 @@ Implementation Notes
 **Hardware:**
 
 * This library currently only officially supports the
-  `Adafruit Funhouse <https://www.adafruit.com/product/4985` but other boards are coming soon.
+  `Adafruit Funhouse <https://www.adafruit.com/product/4985>` but other boards are coming soon.
 
 **Software and Dependencies:**
 
