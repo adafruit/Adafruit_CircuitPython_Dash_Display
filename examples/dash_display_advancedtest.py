@@ -94,6 +94,7 @@ rgb_group.append(B)
 
 # pylint: disable=unused-argument
 
+
 def rgb(last):
     display.show(None)
     rgb_group[3].text = "00"
@@ -141,8 +142,10 @@ def rgb(last):
     display.show(None)
     time.sleep(0.1)
 
+
 def rgb_set_color(message):  # pylint: disable=unused-argument
     return int(message[1:], 16)
+
 
 def door_color(message):
     door = bool(int(message))
@@ -150,11 +153,13 @@ def door_color(message):
         return int(0x00FF00)
     return int(0xFF0000)
 
+
 def on_door(client, feed_id, message):
     door = bool(int(message))
     if door:
         return "Door: Closed"
     return "Door: Open"
+
 
 def pub_lamp(lamp):
     if isinstance(lamp, str):
@@ -162,6 +167,7 @@ def pub_lamp(lamp):
     iot.publish("lamp", str(not lamp))
     # funhouse.set_text(f"Lamp: {not lamp}", 0)
     time.sleep(0.3)
+
 
 display = board.DISPLAY
 
@@ -224,7 +230,7 @@ iot.add_device(
     formatted_text="Door: {}",
     color_callback=door_color,
     callback=on_door,
-    )
+)
 
 iot.get()
 
