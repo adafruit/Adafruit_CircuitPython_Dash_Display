@@ -5,6 +5,3 @@
 
 Adafruit-Blinka
 adafruit_display_shapes
-adafruit_display_text
-displayio
-terminalio
