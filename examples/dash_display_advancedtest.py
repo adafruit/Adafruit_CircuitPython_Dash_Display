@@ -36,11 +36,6 @@ except ImportError:
     print("WiFi secrets are kept in secrets.py, please add them there!")
     raise
 
-
-def rgb_set_color(message):  # pylint: disable=unused-argument
-    return int(message[1:], 16)
-
-
 rgb_group = displayio.Group(max_size=9)
 R_label = Label(
     terminalio.FONT,
@@ -99,7 +94,6 @@ rgb_group.append(B)
 
 # pylint: disable=unused-argument
 
-
 def rgb(last):
     display.show(None)
     rgb_group[3].text = "00"
@@ -147,6 +141,27 @@ def rgb(last):
     display.show(None)
     time.sleep(0.1)
 
+def rgb_set_color(message):  # pylint: disable=unused-argument
+    return int(message[1:], 16)
+
+def door_color(message):
+    door = bool(int(message))
+    if door:
+        return int(0x00FF00)
+    return int(0xFF0000)
+
+def on_door(client, feed_id, message):
+    door = bool(int(message))
+    if door:
+        return "Door: Closed"
+    return "Door: Open"
+
+def pub_lamp(lamp):
+    if isinstance(lamp, str):
+        lamp = eval(lamp)  # pylint: disable=eval-used
+    iot.publish("lamp", str(not lamp))
+    # funhouse.set_text(f"Lamp: {not lamp}", 0)
+    time.sleep(0.3)
 
 display = board.DISPLAY
 
@@ -174,15 +189,6 @@ mqtt_client = MQTT.MQTT(
 
 # Initialize an Adafruit IO MQTT Client
 io = IO_MQTT(mqtt_client)
-
-
-def pub_lamp(lamp):
-    if isinstance(lamp, str):
-        lamp = eval(lamp)  # pylint: disable=eval-used
-    iot.publish("lamp", str(not lamp))
-    # funhouse.set_text(f"Lamp: {not lamp}", 0)
-    time.sleep(0.3)
-
 
 iot = Hub(display=display, io=io, nav=(up, select, down, back, submit))
 
@@ -212,13 +218,15 @@ iot.add_device(
     default_text="Battery: ",
     formatted_text="Battery: {}%",
 )
+iot.add_device(
+    feed_key="door",
+    default_text="Door: ",
+    formatted_text="Door: {}",
+    color_callback=door_color,
+    callback=on_door,
+    )
 
 iot.get()
-# io.get('lamp')
-# io.get('temperature')
-# io.get('humidity')
-# io.get('neopiexl')
-# io.get('battery')
 
 while True:
     iot.loop()

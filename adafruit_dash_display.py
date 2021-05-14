@@ -150,14 +150,10 @@ class Hub:  # pylint: disable=too-many-instance-attributes
         to set the text"""
         feed_id = feed_id.split("/")[-1]
         feed = self.feeds[feed_id]
-        index = feed.index
         try:
             text = feed.text.format(message)
         except ValueError:
             text = feed.text.format(float(message))
-        if feed.color:
-            self.splash[index + 1].color = feed.color(message)
-        feed.last_val = message
         return text
 
     def update_text(self, client, feed_id, message):
@@ -165,6 +161,8 @@ class Hub:  # pylint: disable=too-many-instance-attributes
         feed = self.feeds[feed_id]
         feed.callback(client, feed_id, message)
         self.splash[feed.index + 1].text = feed.callback(client, feed_id, str(message))
+        if feed.color:
+            self.splash[feed.index + 1].color = feed.color(message)
 
     def base_pub(self, var):
         """ Default function called when a feed is published to """
@@ -190,7 +188,6 @@ class Hub:  # pylint: disable=too-many-instance-attributes
             default_text = feed_key
 
         self.io.subscribe(feed_key)
-        # self.io.add_feed_callback(feed_key, callback)
         if len(self.splash) == 1:
             self.splash.append(
                 Label(
