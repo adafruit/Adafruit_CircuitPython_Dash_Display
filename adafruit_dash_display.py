@@ -57,7 +57,7 @@ class Feed:
 
     @key.setter
     def key(self, value):
-        """ Setter for feed key. Will give the value of the feed key"""
+        """ Setter for feed key. Sets a new value for the feed key property _key"""
         self._key = value
 
     @property
