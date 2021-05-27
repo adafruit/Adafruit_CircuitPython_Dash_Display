@@ -52,37 +52,37 @@ class Feed:
 
     @property
     def key(self):
-        """ Getter for feed key """
+        """ Getter for feed key. Will give the value of the feed key"""
         return self._key
 
     @key.setter
     def key(self, value):
-        """ Setter for feed key """
+        """ Setter for feed key. Sets a new value for the feed key property _key"""
         self._key = value
 
     @property
     def text(self):
-        """ Getter for text ready to be formatted """
+        """ Getter for text ready to be formatted. Will give the feed text"""
         return self._text
 
     @text.setter
     def text(self, value):
-        """ Setter for text ready to be formatted """
+        """ Setter for text ready to be formatted. Allows to change the feed text"""
         self._text = value
 
     @property
     def callback(self):
-        """ Getter for callback function """
+        """ Getter for callback function. Returns the feed callback"""
         return self._callback
 
     @callback.setter
     def callback(self, value):
-        """ Setter for callback function """
+        """ Setter for callback function. Changes the feed callback """
         self._callback = value
 
     @property
     def color(self):
-        """ Getter for text color callback function """
+        """ Getter for text color callback function. Will return the color for the feed"""
         return self._color
 
     @color.setter

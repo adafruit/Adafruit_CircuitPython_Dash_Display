@@ -5,4 +5,5 @@
 .. use this format as the module name: "adafruit_foo.foo"
 
 .. automodule:: adafruit_dash_display
-    :members:
+   :members:
+   :member-order: bysource

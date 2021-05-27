@@ -24,6 +24,8 @@ Table of Contents
 .. toctree::
     :caption: Tutorials
 
+    Adafruit IO IOT Hub with the Adafruit FunHouse <https://learn.adafruit.com/adafruit-io-hub-with-the-adafruit-funhouse>
+
 .. toctree::
     :caption: Related Products
 
