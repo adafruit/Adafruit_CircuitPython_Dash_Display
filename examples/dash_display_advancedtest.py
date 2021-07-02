@@ -36,7 +36,7 @@ except ImportError:
     print("WiFi secrets are kept in secrets.py, please add them there!")
     raise
 
-rgb_group = displayio.Group(max_size=9)
+rgb_group = displayio.Group()
 R_label = Label(
     terminalio.FONT,
     text="   +\nR:\n   -",
