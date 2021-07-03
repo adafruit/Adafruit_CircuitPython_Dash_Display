@@ -136,7 +136,7 @@ class Hub:  # pylint: disable=too-many-instance-attributes
 
         self.display.show(None)
 
-        self.splash = displayio.Group(max_size=25)
+        self.splash = displayio.Group()
 
         self.rect = Rect(0, 0, 240, 30, fill=0xFFFFFF)
         self.splash.append(self.rect)
