@@ -133,6 +133,11 @@ Usage Example
         iot.loop()
         time.sleep(0.01)
 
+Documentation
+=============
+
+API documentation for this library can be found on `Read the Docs <https://circuitpython.readthedocs.io/projects/dash_display/en/latest/>`_.
+
 Contributing
 ============
 
