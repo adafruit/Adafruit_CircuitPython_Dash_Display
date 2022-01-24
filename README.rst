@@ -3,7 +3,7 @@ Introduction
 
 
 .. image:: https://readthedocs.org/projects/adafruit-circuitpython-dash_display/badge/?version=latest
-    :target: https://circuitpython.readthedocs.io/projects/dash_display/en/latest/
+    :target: https://docs.circuitpython.org/projects/dash_display/en/latest/
     :alt: Documentation Status
 
 
@@ -136,7 +136,7 @@ Usage Example
 Documentation
 =============
 
-API documentation for this library can be found on `Read the Docs <https://circuitpython.readthedocs.io/projects/dash_display/en/latest/>`_.
+API documentation for this library can be found on `Read the Docs <https://docs.circuitpython.org/projects/dash_display/en/latest/>`_.
 
 Contributing
 ============
