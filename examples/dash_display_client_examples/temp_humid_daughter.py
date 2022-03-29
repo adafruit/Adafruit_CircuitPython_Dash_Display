@@ -101,10 +101,10 @@ try:
         + 10.14333127 * humidity
         - 0.22475541 * T * humidity
         - 0.00683783 * T * T
-        - 0.05481717 * humidity ** 2
+        - 0.05481717 * humidity**2
         + 0.00122874 * T * T * humidity
-        + 0.00085282 * T * humidity ** 2
-        - 0.00000199 * T * T * humidity ** 2
+        + 0.00085282 * T * humidity**2
+        - 0.00000199 * T * T * humidity**2
     )
     magtag.set_text("Feels like: %0.1f F" % HI, 2)
     io.publish("temperature", temperature)

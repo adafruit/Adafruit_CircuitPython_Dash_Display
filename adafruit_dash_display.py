@@ -35,7 +35,7 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Dash_Display.git"
 
 
 class Feed:
-    """ Feed object to make getting and setting different feed properties easier """
+    """Feed object to make getting and setting different feed properties easier"""
 
     def __init__(
         self, key, default_text, formatted_text, callback, color, pub, index
@@ -52,67 +52,67 @@ class Feed:
 
     @property
     def key(self):
-        """ Getter for feed key. Will give the value of the feed key"""
+        """Getter for feed key. Will give the value of the feed key"""
         return self._key
 
     @key.setter
     def key(self, value):
-        """ Setter for feed key. Sets a new value for the feed key property _key"""
+        """Setter for feed key. Sets a new value for the feed key property _key"""
         self._key = value
 
     @property
     def text(self):
-        """ Getter for text ready to be formatted. Will give the feed text"""
+        """Getter for text ready to be formatted. Will give the feed text"""
         return self._text
 
     @text.setter
     def text(self, value):
-        """ Setter for text ready to be formatted. Allows to change the feed text"""
+        """Setter for text ready to be formatted. Allows to change the feed text"""
         self._text = value
 
     @property
     def callback(self):
-        """ Getter for callback function. Returns the feed callback"""
+        """Getter for callback function. Returns the feed callback"""
         return self._callback
 
     @callback.setter
     def callback(self, value):
-        """ Setter for callback function. Changes the feed callback """
+        """Setter for callback function. Changes the feed callback"""
         self._callback = value
 
     @property
     def color(self):
-        """ Getter for text color callback function. Will return the color for the feed"""
+        """Getter for text color callback function. Will return the color for the feed"""
         return self._color
 
     @color.setter
     def color(self, value):
-        """ Setter for text color callback function """
+        """Setter for text color callback function"""
         self._color = value
 
     @property
     def pub(self):
-        """ Getter for publish function, called when a new value is published by this library. """
+        """Getter for publish function, called when a new value is published by this library."""
         return self._pub
 
     @pub.setter
     def pub(self, value):
-        """ Setter for publish function """
+        """Setter for publish function"""
         self._pub = value
 
     @property
     def last_val(self):
-        """ Getter for the last value received """
+        """Getter for the last value received"""
         return self._last_val
 
     @last_val.setter
     def last_val(self, value):
-        """ Setter for last received value """
+        """Setter for last received value"""
         self._last_val = value
 
 
 class Hub:  # pylint: disable=too-many-instance-attributes
-    """ Object that lets you make an IOT dashboard """
+    """Object that lets you make an IOT dashboard"""
 
     def __init__(self, display, io, nav):
         self.display = display
@@ -157,7 +157,7 @@ class Hub:  # pylint: disable=too-many-instance-attributes
         return text
 
     def update_text(self, client, feed_id, message):
-        """ Updates the text on the display """
+        """Updates the text on the display"""
         feed = self.feeds[feed_id]
         feed.callback(client, feed_id, message)
         self.splash[feed.index + 1].text = feed.callback(client, feed_id, str(message))
@@ -165,7 +165,7 @@ class Hub:  # pylint: disable=too-many-instance-attributes
             self.splash[feed.index + 1].color = feed.color(message)
 
     def base_pub(self, var):
-        """ Default function called when a feed is published to """
+        """Default function called when a feed is published to"""
 
     def add_device(
         self,
@@ -176,7 +176,7 @@ class Hub:  # pylint: disable=too-many-instance-attributes
         callback=None,
         pub_method=None,
     ):  # pylint: disable=too-many-arguments
-        """ Adds a feed/device to the UI """
+        """Adds a feed/device to the UI"""
         if not callback:
             callback = self.simple_text_callback
         if not pub_method:
@@ -224,7 +224,7 @@ class Hub:  # pylint: disable=too-many-instance-attributes
         )
 
     def get(self):
-        """ Gets all the subscribed feeds """
+        """Gets all the subscribed feeds"""
         for feed in self.feeds.keys():
             print(f"getting {feed}")
             self.io.get(feed)
@@ -234,21 +234,21 @@ class Hub:  # pylint: disable=too-many-instance-attributes
     # pylint: disable=unused-argument
     @staticmethod
     def connected(client):
-        """ Callback for when the device is connected to Adafruit IO """
+        """Callback for when the device is connected to Adafruit IO"""
         print("Connected to Adafruit IO!")
 
     @staticmethod
     def subscribe(client, userdata, topic, granted_qos):
-        """ Callback for when a new feed is subscribed to """
+        """Callback for when a new feed is subscribed to"""
         print("Subscribed to {0} with QOS level {1}".format(topic, granted_qos))
 
     @staticmethod
     def disconnected(client):
-        """ Callback for when the device disconnects from Adafruit IO """
+        """Callback for when the device disconnects from Adafruit IO"""
         print("Disconnected from Adafruit IO!")
 
     def message(self, client, feed_id, message):
-        """ Callback for whenever a new message is received """
+        """Callback for whenever a new message is received"""
         print("Feed {0} received new value: {1}".format(feed_id, message))
         feed_id = feed_id.split("/")[-1]
         feed = self.feeds[feed_id]
@@ -256,12 +256,12 @@ class Hub:  # pylint: disable=too-many-instance-attributes
         self.update_text(client, feed_id, str(message))
 
     def publish(self, feed, message):
-        """ Callback for publishing a message """
+        """Callback for publishing a message"""
         print(f"Publishing {message} to {feed}")
         self.io.publish(feed, message)
 
     def loop(self):
-        """ Loops Adafruit IO and also checks to see if any buttons have been pressed """
+        """Loops Adafruit IO and also checks to see if any buttons have been pressed"""
         self.io.loop()
         if self.select.value:
             feed = self.feeds[list(self.feeds.keys())[self.selected - 1]]
