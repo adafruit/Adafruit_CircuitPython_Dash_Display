@@ -4,3 +4,5 @@
 # SPDX-License-Identifier: MIT
 
 Adafruit-Blinka
+adafruit-circuitpython-display-shapes
+adafruit-circuitpython-display-text
