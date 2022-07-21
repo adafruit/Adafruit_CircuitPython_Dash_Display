@@ -52,8 +52,8 @@ master_doc = "index"
 
 # General information about the project.
 project = "Adafruit  CircuitPython Dash_Display Library"
-copyright = "2021 Dylan Herrada for Adafruit Industries"
-author = "Dylan Herrada"
+copyright = "2021 Eva Herrada for Adafruit Industries"
+author = "Eva Herrada"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

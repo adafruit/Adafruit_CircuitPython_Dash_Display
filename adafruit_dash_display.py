@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: Copyright (c) 2021 Dylan Herrada for Adafruit Industries
+# SPDX-FileCopyrightText: Copyright (c) 2021 Eva Herrada for Adafruit Industries
 #
 # SPDX-License-Identifier: MIT
 
@@ -7,7 +7,7 @@
 ================================================================================
 CircuitPython library for creating Adafruit IO dashboards.
 
-* Author(s): Dylan Herrada
+* Author(s): Eva Herrada
 
 Implementation Notes
 --------------------
