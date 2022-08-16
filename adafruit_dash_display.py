@@ -30,7 +30,7 @@ from adafruit_display_text.label import Label
 import displayio
 import terminalio
 
-__version__ = "0.0.0-auto.0"
+__version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Dash_Display.git"
 
 
