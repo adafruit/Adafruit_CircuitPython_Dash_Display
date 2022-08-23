@@ -53,8 +53,14 @@ master_doc = "index"
 
 # General information about the project.
 project = "Adafruit  CircuitPython Dash_Display Library"
+creation_year = "2021"
 current_year = str(datetime.datetime.now().year)
-copyright = current_year + " Eva Herrada for Adafruit Industries"
+year_duration = (
+    current_year
+    if current_year == creation_year
+    else creation_year + " - " + current_year
+)
+copyright = year_duration + " Eva Herrada for Adafruit Industries"
 author = "Eva Herrada"
 
 # The version info for the project you're documenting, acts as replacement for
