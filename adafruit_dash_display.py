@@ -114,6 +114,7 @@ class Feed:
 class Hub:  # pylint: disable=too-many-instance-attributes
     """Object that lets you make an IOT dashboard"""
 
+    # pylint: disable=invalid-name
     def __init__(self, display, io, nav):
         self.display = display
 
