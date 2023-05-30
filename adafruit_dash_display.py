@@ -25,6 +25,7 @@ Implementation Notes
 try:
     from typing import Tuple, Callable, Optional, Any
     from adafruit_io.adafruit_io import IO_MQTT
+    from digitalio import DigitalInOut
 except ImportError:
     pass
 
@@ -32,7 +33,6 @@ import time
 from collections import OrderedDict
 import displayio
 import terminalio
-import digitalio
 from adafruit_display_shapes.rect import Rect
 from adafruit_display_text.label import Label
 
@@ -132,7 +132,7 @@ class Hub:  # pylint: disable=too-many-instance-attributes
         self,
         display: displayio.Display,
         io: IO_MQTT,
-        nav: Tuple[digitalio.DigitalInOut, ...],
+        nav: Tuple[DigitalInOut, ...],
     ):
         self.display = display
 
