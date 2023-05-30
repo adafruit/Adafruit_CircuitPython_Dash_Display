@@ -24,6 +24,7 @@ Implementation Notes
 """
 try:
     from typing import Tuple, Callable, Optional, Any
+    from adafruit_io.adafruit_io import IO_MQTT
 except ImportError:
     pass
 
@@ -34,7 +35,6 @@ import terminalio
 import digitalio
 from adafruit_display_shapes.rect import Rect
 from adafruit_display_text.label import Label
-from adafruit_io.adafruit_io import IO_MQTT
 
 __version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Dash_Display.git"
@@ -163,7 +163,7 @@ class Hub:  # pylint: disable=too-many-instance-attributes
         self.display.show(self.splash)
 
     def simple_text_callback(
-        self, client: Any, feed_id: str, message: str
+        self, client: IO_MQTT, feed_id: str, message: str
     ):  # pylint: disable=unused-argument
         """Default callback function that uses the text in the Feed object and the color callback
         to set the text"""
@@ -175,7 +175,7 @@ class Hub:  # pylint: disable=too-many-instance-attributes
             text = feed.text.format(float(message))
         return text
 
-    def update_text(self, client: Any, feed_id: str, message: str):
+    def update_text(self, client: IO_MQTT, feed_id: str, message: str):
         """Updates the text on the display"""
         feed = self.feeds[feed_id]
         feed.callback(client, feed_id, message)
@@ -252,21 +252,21 @@ class Hub:  # pylint: disable=too-many-instance-attributes
 
     # pylint: disable=unused-argument
     @staticmethod
-    def connected(client: Any):
+    def connected(client: IO_MQTT):
         """Callback for when the device is connected to Adafruit IO"""
         print("Connected to Adafruit IO!")
 
     @staticmethod
-    def subscribe(client: Any, userdata: Any, topic: str, granted_qos: str):
+    def subscribe(client: IO_MQTT, userdata: Any, topic: str, granted_qos: str):
         """Callback for when a new feed is subscribed to"""
         print("Subscribed to {0} with QOS level {1}".format(topic, granted_qos))
 
     @staticmethod
-    def disconnected(client: Any):
+    def disconnected(client: IO_MQTT):
         """Callback for when the device disconnects from Adafruit IO"""
         print("Disconnected from Adafruit IO!")
 
-    def message(self, client: Any, feed_id: str, message: str):
+    def message(self, client: IO_MQTT, feed_id: str, message: str):
         """Callback for whenever a new message is received"""
         print("Feed {0} received new value: {1}".format(feed_id, message))
         feed_id = feed_id.split("/")[-1]
