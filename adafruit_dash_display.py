@@ -263,7 +263,7 @@ class Hub:  # pylint: disable=too-many-instance-attributes
     @staticmethod
     def subscribe(client: IO_MQTT, userdata: Any, topic: str, granted_qos: str):
         """Callback for when a new feed is subscribed to"""
-        print("Subscribed to {0} with QOS level {1}".format(topic, granted_qos))
+        print(f"Subscribed to {topic} with QOS level {granted_qos}")
 
     @staticmethod
     def disconnected(client: IO_MQTT):
@@ -272,7 +272,7 @@ class Hub:  # pylint: disable=too-many-instance-attributes
 
     def message(self, client: IO_MQTT, feed_id: str, message: str):
         """Callback for whenever a new message is received"""
-        print("Feed {0} received new value: {1}".format(feed_id, message))
+        print(f"Feed {feed_id} received new value: {message}")
         feed_id = feed_id.split("/")[-1]
         feed = self.feeds[feed_id]
         feed.last_val = message
