@@ -133,6 +133,14 @@ class Hub:  # pylint: disable=too-many-instance-attributes
         io_object: IO_MQTT,
         nav: Tuple[DigitalInOut, ...],
     ):
+        """
+        Object that lets you make an IOT dashboard
+
+        :param display: The display object.
+        :param io_object: The io object.
+        :param nav: The navigation buttons.
+
+        """
         self.display = display
 
         self.io_object = io_object
