@@ -125,18 +125,23 @@ class Feed:
 
 
 class Hub:  # pylint: disable=too-many-instance-attributes
-    """Object that lets you make an IOT dashboard"""
+    """
+    Object that lets you make an IOT dashboard
 
-    # pylint: disable=invalid-name
+    :param displayio.Display display: The display for the dashboard.
+    :param IO_MQTT io_mqtt: MQTT communications object.
+    :param Tuple[DigitalInOut, ...] nav: The navigation pushbuttons.
+    """
+
     def __init__(
         self,
         display: displayio.Display,
-        io: IO_MQTT,
+        io_mqtt: IO_MQTT,
         nav: Tuple[DigitalInOut, ...],
     ):
         self.display = display
 
-        self.io = io  # pylint: disable=invalid-name
+        self.io_mqtt = io_mqtt
 
         self.up_btn, self.select, self.down, self.back, self.submit = nav
 
@@ -145,13 +150,13 @@ class Hub:  # pylint: disable=too-many-instance-attributes
 
         self.feeds = OrderedDict()
 
-        self.io.on_mqtt_connect = self.connected
-        self.io.on_mqtt_disconnect = self.disconnected
-        self.io.on_mqtt_subscribe = self.subscribe
-        self.io.on_message = self.message
+        self.io_mqtt.on_mqtt_connect = self.connected
+        self.io_mqtt.on_mqtt_disconnect = self.disconnected
+        self.io_mqtt.on_mqtt_subscribe = self.subscribe
+        self.io_mqtt.on_message = self.message
 
         print("Connecting to Adafruit IO...")
-        io.connect()
+        io_mqtt.connect()
 
         self.display.show(None)
 
@@ -206,7 +211,7 @@ class Hub:  # pylint: disable=too-many-instance-attributes
         if not default_text:
             default_text = feed_key
 
-        self.io.subscribe(feed_key)
+        self.io_mqtt.subscribe(feed_key)
         if len(self.splash) == 1:
             self.splash.append(
                 Label(
@@ -246,9 +251,9 @@ class Hub:  # pylint: disable=too-many-instance-attributes
         """Gets all the subscribed feeds"""
         for feed in self.feeds.keys():
             print(f"getting {feed}")
-            self.io.get(feed)
+            self.io_mqtt.get(feed)
             time.sleep(0.1)
-        self.io.loop()
+        self.io_mqtt.loop()
 
     # pylint: disable=unused-argument
     @staticmethod
@@ -259,7 +264,7 @@ class Hub:  # pylint: disable=too-many-instance-attributes
     @staticmethod
     def subscribe(client: IO_MQTT, userdata: Any, topic: str, granted_qos: str):
         """Callback for when a new feed is subscribed to"""
-        print("Subscribed to {0} with QOS level {1}".format(topic, granted_qos))
+        print(f"Subscribed to {topic} with QOS level {granted_qos}")
 
     @staticmethod
     def disconnected(client: IO_MQTT):
@@ -268,7 +273,7 @@ class Hub:  # pylint: disable=too-many-instance-attributes
 
     def message(self, client: IO_MQTT, feed_id: str, message: str):
         """Callback for whenever a new message is received"""
-        print("Feed {0} received new value: {1}".format(feed_id, message))
+        print(f"Feed {feed_id} received new value: {message}")
         feed_id = feed_id.split("/")[-1]
         feed = self.feeds[feed_id]
         feed.last_val = message
@@ -277,11 +282,11 @@ class Hub:  # pylint: disable=too-many-instance-attributes
     def publish(self, feed: Feed, message: str):
         """Callback for publishing a message"""
         print(f"Publishing {message} to {feed}")
-        self.io.publish(feed, message)
+        self.io_mqtt.publish(feed, message)
 
     def loop(self):
         """Loops Adafruit IO and also checks to see if any buttons have been pressed"""
-        self.io.loop()
+        self.io_mqtt.loop()
         if self.select.value:
             feed = self.feeds[list(self.feeds.keys())[self.selected - 1]]
             if feed.pub:

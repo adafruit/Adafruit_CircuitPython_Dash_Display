@@ -69,7 +69,7 @@ def pub_lamp(lamp):
     time.sleep(0.3)
 
 
-iot = Hub(display=display, io=io, nav=(up, select, down, back, submit))
+iot = Hub(display=display, io_mqtt=io, nav=(up, select, down, back, submit))
 
 iot.add_device(
     feed_key="lamp",
