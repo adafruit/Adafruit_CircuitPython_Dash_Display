@@ -136,12 +136,12 @@ class Hub:  # pylint: disable=too-many-instance-attributes
     def __init__(
         self,
         display: displayio.Display,
-        io_object: IO_MQTT,
+        io_mqtt: IO_MQTT,
         nav: Tuple[DigitalInOut, ...],
     ):
         self.display = display
 
-        self.io_object = io_object
+        self.io_mqtt = io_mqtt
 
         self.up_btn, self.select, self.down, self.back, self.submit = nav
 
@@ -150,13 +150,13 @@ class Hub:  # pylint: disable=too-many-instance-attributes
 
         self.feeds = OrderedDict()
 
-        self.io_object.on_mqtt_connect = self.connected
-        self.io_object.on_mqtt_disconnect = self.disconnected
-        self.io_object.on_mqtt_subscribe = self.subscribe
-        self.io_object.on_message = self.message
+        self.io_mqtt.on_mqtt_connect = self.connected
+        self.io_mqtt.on_mqtt_disconnect = self.disconnected
+        self.io_mqtt.on_mqtt_subscribe = self.subscribe
+        self.io_mqtt.on_message = self.message
 
         print("Connecting to Adafruit IO...")
-        io_object.connect()
+        io_mqtt.connect()
 
         self.display.show(None)
 
@@ -211,7 +211,7 @@ class Hub:  # pylint: disable=too-many-instance-attributes
         if not default_text:
             default_text = feed_key
 
-        self.io_object.subscribe(feed_key)
+        self.io_mqtt.subscribe(feed_key)
         if len(self.splash) == 1:
             self.splash.append(
                 Label(
@@ -251,9 +251,9 @@ class Hub:  # pylint: disable=too-many-instance-attributes
         """Gets all the subscribed feeds"""
         for feed in self.feeds.keys():
             print(f"getting {feed}")
-            self.io_object.get(feed)
+            self.io_mqtt.get(feed)
             time.sleep(0.1)
-        self.io_object.loop()
+        self.io_mqtt.loop()
 
     # pylint: disable=unused-argument
     @staticmethod
@@ -282,11 +282,11 @@ class Hub:  # pylint: disable=too-many-instance-attributes
     def publish(self, feed: Feed, message: str):
         """Callback for publishing a message"""
         print(f"Publishing {message} to {feed}")
-        self.io_object.publish(feed, message)
+        self.io_mqtt.publish(feed, message)
 
     def loop(self):
         """Loops Adafruit IO and also checks to see if any buttons have been pressed"""
-        self.io_object.loop()
+        self.io_mqtt.loop()
         if self.select.value:
             feed = self.feeds[list(self.feeds.keys())[self.selected - 1]]
             if feed.pub:
