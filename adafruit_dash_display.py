@@ -158,14 +158,14 @@ class Hub:  # pylint: disable=too-many-instance-attributes
         print("Connecting to Adafruit IO...")
         io_mqtt.connect()
 
-        self.display.show(None)
+        self.display.root_group = None
 
         self.splash = displayio.Group()
 
         self.rect = Rect(0, 0, 240, 30, fill=0xFFFFFF)
         self.splash.append(self.rect)
 
-        self.display.show(self.splash)
+        self.display.root_group = self.splash
 
     def simple_text_callback(
         self, client: IO_MQTT, feed_id: str, message: str
@@ -291,7 +291,7 @@ class Hub:  # pylint: disable=too-many-instance-attributes
             feed = self.feeds[list(self.feeds.keys())[self.selected - 1]]
             if feed.pub:
                 feed.pub(feed.last_val)
-                self.display.show(self.splash)
+                self.display.root_group = self.splash
             while self.select.value:
                 pass
 

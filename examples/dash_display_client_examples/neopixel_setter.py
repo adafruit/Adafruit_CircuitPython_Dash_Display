@@ -7,7 +7,7 @@ from adafruit_display_shapes.rect import Rect
 
 funhouse = FunHouse(default_bg=None)
 
-funhouse.display.show(None)
+funhouse.display.root_group = None
 rect = Rect(31, 105, 30, 30, fill=0xFFFFFF)
 funhouse.splash.append(rect)
 R_label = funhouse.add_text(
@@ -28,7 +28,7 @@ G = funhouse.add_text(
 B = funhouse.add_text(
     text="00", text_position=(205, 120), text_scale=2, text_color=0x000000
 )
-funhouse.display.show(funhouse.splash)
+funhouse.display.root_group = funhouse.splash
 
 index = 0
 colors = [00, 00, 00]
