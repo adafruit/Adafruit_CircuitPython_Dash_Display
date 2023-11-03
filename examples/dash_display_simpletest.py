@@ -3,6 +3,7 @@
 
 import time
 import ssl
+from os import getenv
 import board
 from digitalio import DigitalInOut, Direction, Pull
 import touchio
@@ -27,15 +28,28 @@ down.pull = Pull.DOWN
 back = touchio.TouchIn(board.CAP7)
 submit = touchio.TouchIn(board.CAP8)
 
-try:
-    from secrets import secrets
-except ImportError:
-    print("WiFi secrets are kept in secrets.py, please add them there!")
-    raise
+# Get wifi details and more from a settings.toml file
+# tokens used by this Demo: CIRCUITPY_WIFI_SSID, CIRCUITPY_WIFI_PASSWORD
+#                           CIRCUITPY_AIO_USERNAME, CIRCUITPY_AIO_KEY
+secrets = {}
+for token in ["SSID", "PASSWORD"]:
+    if getenv("CIRCUITPY_WIFI_" + token):
+        secrets[token.lower()] = getenv("CIRCUITPY_WIFI_" + token)
+for token in ["AIO_USERNAME", "AIO_KEY"]:
+    if getenv("CIRCUITPY_" + token):
+        secrets[token.lower()] = getenv("CIRCUITPY_" + token)
+
+if not secrets:
+    try:
+        # Fallback on secrets.py until depreciation is over and option is removed
+        from secrets import secrets
+    except ImportError:
+        print("WiFi secrets are kept in settings.toml, please add them there!")
+        raise
 
 display = board.DISPLAY
 
-# Set your Adafruit IO Username and Key in secrets.py
+# Set your Adafruit IO Username and Key in settings.toml
 # (visit io.adafruit.com if you need to create an account,
 # or if you need your Adafruit IO key.)
 aio_username = secrets["aio_username"]
