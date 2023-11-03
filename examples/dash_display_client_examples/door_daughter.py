@@ -19,12 +19,12 @@ from adafruit_debouncer import Debouncer
 # tokens used by this Demo: CIRCUITPY_WIFI_SSID, CIRCUITPY_WIFI_PASSWORD
 #                           CIRCUITPY_AIO_USERNAME, CIRCUITPY_AIO_KEY
 secrets = {}
-for token in ["ssid", "password"]:
-    if getenv("CIRCUITPY_WIFI_" + token.upper()):
-        secrets[token] = getenv("CIRCUITPY_WIFI_" + token.upper())
-for token in ["aio_username", "aio_key"]:
-    if getenv("CIRCUITPY_" + token.upper()):
-        secrets[token] = getenv("CIRCUITPY_" + token.upper())
+for token in ["SSID", "PASSWORD"]:
+    if getenv("CIRCUITPY_WIFI_" + token):
+        secrets[token.lower()] = getenv("CIRCUITPY_WIFI_" + token)
+for token in ["AIO_USERNAME", "AIO_KEY"]:
+    if getenv("CIRCUITPY_" + token):
+        secrets[token.lower()] = getenv("CIRCUITPY_" + token)
 
 if not secrets:
     try:
