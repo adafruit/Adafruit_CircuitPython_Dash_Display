@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2021 Eva Herrada for Adafruit Industries
 # SPDX-License-Identifier: MIT
 
+from os import getenv
 import ssl
 import socketpool
 import wifi
@@ -14,20 +15,33 @@ import adafruit_sht4x
 
 ### WiFi ###
 
-# Add a secrets.py to your filesystem that has a dictionary called secrets with "ssid" and
-# "password" keys with your WiFi credentials. DO NOT share that file or commit it into Git or other
-# source control.
+# Add a settings.toml to your filesystem that has token variables "CIRCUITPY_WIFI_SSID" and
+# "CIRCUITPY_WIFI_PASSWORD" with your WiFi credentials. DO NOT share that file or commit it
+# into Git or other source control.
 # pylint: disable=no-name-in-module,wrong-import-order
 
 magtag = MagTag()
 
-try:
-    from secrets import secrets
-except ImportError:
-    print("WiFi secrets are kept in secrets.py, please add them there!")
-    raise
+# Get wifi details and more from a settings.toml file
+# tokens used by this Demo: CIRCUITPY_WIFI_SSID, CIRCUITPY_WIFI_PASSWORD
+#                           CIRCUITPY_AIO_USERNAME, CIRCUITPY_AIO_KEY
+secrets = {}
+for token in ["ssid", "password"]:
+    if getenv("CIRCUITPY_WIFI_" + token.upper()):
+        secrets[token] = getenv("CIRCUITPY_WIFI_" + token.upper())
+for token in ["aio_username", "aio_key"]:
+    if getenv("CIRCUITPY_" + token.upper()):
+        secrets[token] = getenv("CIRCUITPY_" + token.upper())
 
-# Set your Adafruit IO Username and Key in secrets.py
+if not secrets:
+    try:
+        # Fallback on secrets.py until depreciation is over and option is removed
+        from secrets import secrets
+    except ImportError:
+        print("WiFi secrets are kept in settings.toml, please add them there!")
+        raise
+
+# Set your Adafruit IO Username and Key in settings.toml
 # (visit io.adafruit.com if you need to create an account,
 # or if you need your Adafruit IO key.)
 aio_username = secrets["aio_username"]
