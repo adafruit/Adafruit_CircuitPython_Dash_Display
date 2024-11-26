@@ -193,8 +193,12 @@ class Hub:  # pylint: disable=too-many-instance-attributes
         self.display.root_group = self.splash
 
     def simple_text_callback(
-        self, client: IO_MQTT, feed_id: str, message: str
-    ) -> str:  # pylint: disable=unused-argument
+        # pylint: disable=unused-argument
+        self,
+        client: IO_MQTT,
+        feed_id: str,
+        message: str,
+    ) -> str:
         """Default callback function that uses the text in the Feed object and the color callback
         to set the text
 
