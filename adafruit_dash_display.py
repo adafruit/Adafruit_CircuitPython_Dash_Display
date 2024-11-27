@@ -41,7 +41,17 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_Dash_Display.git"
 
 
 class Feed:
-    """Feed object to make getting and setting different feed properties easier"""
+    """Feed object to make getting and setting different feed properties easier
+
+    :param str key: The Adafruit IO key.
+    :param str default_text: Text to display before data has been pulled from Adafruit IO.
+    :param str formatted_text: String with formatting placeholders within it ready to have
+        data formatted into it.
+    :param Callable callback: A function to call when the feed is fetched.
+    :param int color: Hex color code for the feed text.
+    :param Callable pub: a function to call when data is published to the feed.
+
+    """
 
     def __init__(
         self,
@@ -64,63 +74,78 @@ class Feed:
         self._last_val = None
 
     @property
-    def key(self):
+    def key(self) -> str:
         """Getter for feed key. Will give the value of the feed key"""
         return self._key
 
     @key.setter
-    def key(self, value: str):
-        """Setter for feed key. Sets a new value for the feed key property _key"""
+    def key(self, value: str) -> None:
+        """Setter for feed key. Sets a new value for the feed key property _key
+
+        :param str value: The new value of the feed key.
+        """
         self._key = value
 
     @property
-    def text(self):
+    def text(self) -> str:
         """Getter for text ready to be formatted. Will give the feed text"""
         return self._text
 
     @text.setter
-    def text(self, value: str):
-        """Setter for text ready to be formatted. Allows to change the feed text"""
+    def text(self, value: str) -> None:
+        """Setter for text ready to be formatted. Allows to change the feed text
+
+        :param str value: The new value of the feed text.
+        """
         self._text = value
 
     @property
-    def callback(self):
+    def callback(self) -> Optional[Callable]:
         """Getter for callback function. Returns the feed callback"""
         return self._callback
 
     @callback.setter
-    def callback(self, value: Callable):
-        """Setter for callback function. Changes the feed callback"""
+    def callback(self, value: Callable) -> None:
+        """Setter for callback function. Changes the feed callback
+
+        :param Callable value: A function to call when the feed is fetched.
+        """
         self._callback = value
 
     @property
-    def color(self):
+    def color(self) -> int:
         """Getter for text color callback function. Will return the color for the feed"""
         return self._color
 
     @color.setter
-    def color(self, value: int):
-        """Setter for text color callback function"""
+    def color(self, value: int) -> None:
+        """Setter for text color callback function
+
+        :param int value: The new value of the feed color.
+        """
         self._color = value
 
     @property
-    def pub(self):
+    def pub(self) -> Optional[Callable]:
         """Getter for publish function, called when a new value is published by this library."""
         return self._pub
 
     @pub.setter
-    def pub(self, value: Callable):
+    def pub(self, value: Callable) -> None:
         """Setter for publish function"""
         self._pub = value
 
     @property
-    def last_val(self):
+    def last_val(self) -> Optional[str]:
         """Getter for the last value received"""
         return self._last_val
 
     @last_val.setter
-    def last_val(self, value: str):
-        """Setter for last received value"""
+    def last_val(self, value: str) -> None:
+        """Setter for last received value
+
+        :param str value: The newly received value.
+        """
         self._last_val = value
 
 
@@ -168,10 +193,20 @@ class Hub:  # pylint: disable=too-many-instance-attributes
         self.display.root_group = self.splash
 
     def simple_text_callback(
-        self, client: IO_MQTT, feed_id: str, message: str
-    ):  # pylint: disable=unused-argument
+        # pylint: disable=unused-argument
+        self,
+        client: IO_MQTT,
+        feed_id: str,
+        message: str,
+    ) -> str:
         """Default callback function that uses the text in the Feed object and the color callback
-        to set the text"""
+        to set the text
+
+        :param IO_MQTT client: The MQTT client to use.
+        :param str feed_id: The Adafruit IO feed ID.
+        :param str message: The text to display.
+        :return: A string with data formatted into it.
+        """
         feed_id = feed_id.split("/")[-1]
         feed = self.feeds[feed_id]
         try:
@@ -180,15 +215,20 @@ class Hub:  # pylint: disable=too-many-instance-attributes
             text = feed.text.format(float(message))
         return text
 
-    def update_text(self, client: IO_MQTT, feed_id: str, message: str):
-        """Updates the text on the display"""
+    def update_text(self, client: IO_MQTT, feed_id: str, message: str) -> None:
+        """Updates the text on the display
+
+        :param IO_MQTT client: The MQTT client to use.
+        :param str feed_id: The Adafruit IO feed ID.
+        :param str message: The text to display.
+        """
         feed = self.feeds[feed_id]
         feed.callback(client, feed_id, message)
         self.splash[feed.index + 1].text = feed.callback(client, feed_id, str(message))
         if feed.color:
             self.splash[feed.index + 1].color = feed.color(message)
 
-    def base_pub(self, var: Any):
+    def base_pub(self, var: Any) -> None:
         """Default function called when a feed is published to"""
 
     def add_device(
@@ -200,7 +240,17 @@ class Hub:  # pylint: disable=too-many-instance-attributes
         callback: Optional[Callable] = None,
         pub_method: Optional[Callable] = None,
     ):  # pylint: disable=too-many-arguments
-        """Adds a feed/device to the UI"""
+        """Adds a feed/device to the UI
+
+        :param feed_key: The Adafruit IO feed key.
+        :param str default_text: The default text for the device.
+        :param str formatted_text: The formatted text for the device.
+        :param int color_callback: The color to use for the device
+        :param Callable callback: The callback function to be called
+            when data is fetched.
+        :param Callable pub_method: The pub_method to be called
+            when data is published.
+        """
         if not callback:
             callback = self.simple_text_callback
         if not pub_method:
@@ -247,7 +297,7 @@ class Hub:  # pylint: disable=too-many-instance-attributes
             index=len(self.feeds),
         )
 
-    def get(self):
+    def get(self) -> None:
         """Gets all the subscribed feeds"""
         for feed in self.feeds.keys():
             print(f"getting {feed}")
@@ -257,34 +307,55 @@ class Hub:  # pylint: disable=too-many-instance-attributes
 
     # pylint: disable=unused-argument
     @staticmethod
-    def connected(client: IO_MQTT):
-        """Callback for when the device is connected to Adafruit IO"""
+    def connected(client: IO_MQTT) -> None:
+        """Callback for when the device is connected to Adafruit IO
+
+        :param IO_MQTT client: The MQTT client to use.
+        """
         print("Connected to Adafruit IO!")
 
     @staticmethod
-    def subscribe(client: IO_MQTT, userdata: Any, topic: str, granted_qos: str):
-        """Callback for when a new feed is subscribed to"""
+    def subscribe(client: IO_MQTT, userdata: Any, topic: str, granted_qos: str) -> None:
+        """Callback for when a new feed is subscribed to
+
+        :param IO_MQTT client: The MQTT client to use.
+        :param str userdata: The userdata to subscribe to.
+        :param str topic: The topic to subscribe to.
+        :param str granted_qos: The QoS level.
+        """
         print(f"Subscribed to {topic} with QOS level {granted_qos}")
 
     @staticmethod
-    def disconnected(client: IO_MQTT):
-        """Callback for when the device disconnects from Adafruit IO"""
+    def disconnected(client: IO_MQTT) -> None:
+        """Callback for when the device disconnects from Adafruit IO
+
+        :param IO_MQTT client: The MQTT client to use.
+        """
         print("Disconnected from Adafruit IO!")
 
-    def message(self, client: IO_MQTT, feed_id: str, message: str):
-        """Callback for whenever a new message is received"""
+    def message(self, client: IO_MQTT, feed_id: str, message: str) -> None:
+        """Callback for whenever a new message is received
+
+        :param IO_MQTT client: The MQTT client to use.
+        :param str feed_id: The Adafruit IO feed ID.
+        :param str message: The message received.
+        """
         print(f"Feed {feed_id} received new value: {message}")
         feed_id = feed_id.split("/")[-1]
         feed = self.feeds[feed_id]
         feed.last_val = message
         self.update_text(client, feed_id, str(message))
 
-    def publish(self, feed: Feed, message: str):
-        """Callback for publishing a message"""
+    def publish(self, feed: Feed, message: str) -> None:
+        """Callback for publishing a message
+
+        :param Feed feed: The feed to publish to.
+        :param str message: The message to publish.
+        """
         print(f"Publishing {message} to {feed}")
         self.io_mqtt.publish(feed, message)
 
-    def loop(self):
+    def loop(self) -> None:
         """Loops Adafruit IO and also checks to see if any buttons have been pressed"""
         self.io_mqtt.loop()
         if self.select.value:
