@@ -2,9 +2,8 @@
 # SPDX-License-Identifier: MIT
 
 from os import getenv
-import ssl
-import socketpool
 import wifi
+import adafruit_connection_manager
 import adafruit_minimqtt.adafruit_minimqtt as MQTT
 from adafruit_io.adafruit_io import IO_MQTT
 
@@ -13,8 +12,6 @@ import busio
 import board
 import adafruit_sht4x
 
-### WiFi ###
-
 # Add a settings.toml to your filesystem that has token variables "CIRCUITPY_WIFI_SSID" and
 # "CIRCUITPY_WIFI_PASSWORD" with your WiFi credentials. DO NOT share that file or commit it
 # into Git or other source control.
@@ -22,46 +19,31 @@ import adafruit_sht4x
 
 magtag = MagTag()
 
-# Get wifi details and more from a settings.toml file
-# tokens used by this Demo: CIRCUITPY_WIFI_SSID, CIRCUITPY_WIFI_PASSWORD
-#                           CIRCUITPY_AIO_USERNAME, CIRCUITPY_AIO_KEY
-secrets = {}
-for token in ["SSID", "PASSWORD"]:
-    if getenv("CIRCUITPY_WIFI_" + token):
-        secrets[token.lower()] = getenv("CIRCUITPY_WIFI_" + token)
-for token in ["AIO_USERNAME", "AIO_KEY"]:
-    if getenv("CIRCUITPY_" + token):
-        secrets[token.lower()] = getenv("CIRCUITPY_" + token)
+# Get WiFi details and Adafruit IO keys, ensure these are setup in settings.toml
+# (visit io.adafruit.com if you need to create an account, or if you need your Adafruit IO key.)
+ssid = getenv("CIRCUITPY_WIFI_SSID")
+password = getenv("CIRCUITPY_WIFI_PASSWORD")
+aio_username = getenv("ADAFRUIT_AIO_USERNAME")
+aio_key = getenv("ADAFRUIT_AIO_KEY")
 
-if not secrets:
-    try:
-        # Fallback on secrets.py until depreciation is over and option is removed
-        from secrets import secrets
-    except ImportError:
-        print("WiFi secrets are kept in settings.toml, please add them there!")
-        raise
-
-# Set your Adafruit IO Username and Key in settings.toml
-# (visit io.adafruit.com if you need to create an account,
-# or if you need your Adafruit IO key.)
-aio_username = secrets["aio_username"]
-aio_key = secrets["aio_key"]
+### WiFi ###
 
 try:
-    print("Connecting to %s" % secrets["ssid"])
-    wifi.radio.connect(secrets["ssid"], secrets["password"])
-    print("Connected to %s!" % secrets["ssid"])
+    print(f"Connecting to {ssid}")
+    wifi.radio.connect(ssid, password)
+    print(f"Connected to {ssid}!")
 
-    # Create a socket pool
-    pool = socketpool.SocketPool(wifi.radio)
+    # Create a socket pool and ssl_context
+    pool = adafruit_connection_manager.get_radio_socketpool(wifi.radio)
+    ssl_context = adafruit_connection_manager.get_radio_ssl_context(wifi.radio)
 
     # Initialize a new MQTT Client object
     mqtt_client = MQTT.MQTT(
         broker="io.adafruit.com",
-        username=secrets["aio_username"],
-        password=secrets["aio_key"],
+        username=aio_username,
+        password=aio_key,
         socket_pool=pool,
-        ssl_context=ssl.create_default_context(),
+        ssl_context=ssl_context,
     )
 
     # Initialize an Adafruit IO MQTT Client
