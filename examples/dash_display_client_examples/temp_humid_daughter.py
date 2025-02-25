@@ -41,7 +41,7 @@ try:
     mqtt_client = MQTT.MQTT(
         broker="io.adafruit.com",
         username=aio_username,
-        password=aio_username,
+        password=aio_key,
         socket_pool=pool,
         ssl_context=ssl_context,
     )
