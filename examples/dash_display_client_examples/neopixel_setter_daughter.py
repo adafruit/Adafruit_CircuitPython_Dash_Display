@@ -1,25 +1,26 @@
 # SPDX-FileCopyrightText: 2021 Eva Herrada for Adafruit Industries
 # SPDX-License-Identifier: MIT
 
-import time
 import math
+import time
 from os import getenv
-import board
-import busio
-from digitalio import DigitalInOut
-import displayio
-from adafruit_display_shapes.rect import Rect
+
 import adafruit_imageload
 import adafruit_touchscreen
+import board
+import busio
+import displayio
+
+# Import NeoPixel Library
+import neopixel
+from adafruit_display_shapes.rect import Rect
 
 # ESP32 SPI
 from adafruit_esp32spi import adafruit_esp32spi, adafruit_esp32spi_wifimanager
 
-# Import NeoPixel Library
-import neopixel
-
 # Import Adafruit IO HTTP Client
 from adafruit_io.adafruit_io import IO_HTTP, AdafruitIO_RequestError
+from digitalio import DigitalInOut
 
 ts = adafruit_touchscreen.Touchscreen(
     board.TOUCH_XL,
@@ -123,9 +124,7 @@ status_pixel = neopixel.NeoPixel(board.NEOPIXEL, 1, brightness=0.2)
 # BLUE_LED = PWMOut.PWMOut(esp, 25)
 # status_pixel = adafruit_rgbled.RGBLED(RED_LED, BLUE_LED, GREEN_LED)
 
-wifi = adafruit_esp32spi_wifimanager.WiFiManager(
-    esp, ssid, password, status_pixel=status_pixel
-)
+wifi = adafruit_esp32spi_wifimanager.WiFiManager(esp, ssid, password, status_pixel=status_pixel)
 
 # Create an instance of the Adafruit IO HTTP client
 io = IO_HTTP(aio_username, aio_key, wifi)
@@ -152,7 +151,7 @@ while True:
             if colors[index]:
                 group[1].fill = color
                 if last_color != color:
-                    color_str = "#{:06x}".format(color)
+                    color_str = f"#{color:06x}"
                     print(color_str)
                     io.send_data(neopixel_feed["key"], color_str)
                     last_color = color

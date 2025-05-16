@@ -2,8 +2,9 @@
 # SPDX-License-Identifier: MIT
 
 import time
-from adafruit_funhouse import FunHouse
+
 from adafruit_display_shapes.rect import Rect
+from adafruit_funhouse import FunHouse
 
 funhouse = FunHouse(default_bg=None)
 
@@ -19,15 +20,9 @@ G_label = funhouse.add_text(
 B_label = funhouse.add_text(
     text="   +\nB:\n   -", text_position=(175, 120), text_scale=2, text_color=0xFFFFFF
 )
-R = funhouse.add_text(
-    text="00", text_position=(35, 120), text_scale=2, text_color=0x000000
-)
-G = funhouse.add_text(
-    text="00", text_position=(120, 120), text_scale=2, text_color=0x000000
-)
-B = funhouse.add_text(
-    text="00", text_position=(205, 120), text_scale=2, text_color=0x000000
-)
+R = funhouse.add_text(text="00", text_position=(35, 120), text_scale=2, text_color=0x000000)
+G = funhouse.add_text(text="00", text_position=(120, 120), text_scale=2, text_color=0x000000)
+B = funhouse.add_text(text="00", text_position=(205, 120), text_scale=2, text_color=0x000000)
 funhouse.display.root_group = funhouse.splash
 
 index = 0
@@ -52,7 +47,7 @@ while True:
         funhouse.set_text(hex(colors[index])[2:], index + 3)
 
     if funhouse.peripherals.captouch8:
-        color = ["{:02x}".format(colors[i]) for i in range(len(colors))]
+        color = [f"{colors[i]:02x}" for i in range(len(colors))]
         color = "#" + "".join(color)
         break
 

@@ -3,21 +3,20 @@
 
 import time
 from os import getenv
-import board
-from adafruit_lc709203f import LC709203F
-import busio
-from digitalio import DigitalInOut
-import adafruit_connection_manager
-from adafruit_esp32spi import adafruit_esp32spi
-from adafruit_esp32spi import adafruit_esp32spi_wifimanager
-import neopixel
-import adafruit_minimqtt.adafruit_minimqtt as MQTT
-from adafruit_io.adafruit_io import IO_MQTT
 
+import adafruit_connection_manager
+import adafruit_displayio_ssd1306
+import adafruit_minimqtt.adafruit_minimqtt as MQTT
+import board
+import busio
 import displayio
+import neopixel
 import terminalio
 from adafruit_display_text import label
-import adafruit_displayio_ssd1306
+from adafruit_esp32spi import adafruit_esp32spi, adafruit_esp32spi_wifimanager
+from adafruit_io.adafruit_io import IO_MQTT
+from adafruit_lc709203f import LC709203F
+from digitalio import DigitalInOut
 
 displayio.release_displays()
 
@@ -59,24 +58,21 @@ status_pixel = neopixel.NeoPixel(board.NEOPIXEL, 1, brightness=0.2)
 # BLUE_LED = PWMOut.PWMOut(esp, 25)
 # status_pixel = adafruit_rgbled.RGBLED(RED_LED, BLUE_LED, GREEN_LED)
 
-wifi = adafruit_esp32spi_wifimanager.WiFiManager(
-    esp, ssid, password, status_pixel=status_pixel
-)
+wifi = adafruit_esp32spi_wifimanager.WiFiManager(esp, ssid, password, status_pixel=status_pixel)
 
 
 # Define callback functions which will be called when certain events happen.
-# pylint: disable=unused-argument
 def connected(client):
     client.subscribe("battery")
 
 
 def subscribe(client, userdata, topic, granted_qos):
     # This method is called when the client subscribes to a new feed.
-    print("Subscribed to {0} with QOS level {1}".format(topic, granted_qos))
+    print(f"Subscribed to {topic} with QOS level {granted_qos}")
 
 
 def message(client, feed_id, payload):
-    print("Feed {0} received new value: {1}".format(feed_id, payload))
+    print(f"Feed {feed_id} received new value: {payload}")
 
 
 # Connect to WiFi
@@ -119,9 +115,7 @@ display = adafruit_displayio_ssd1306.SSD1306(display_bus, width=WIDTH, height=HE
 splash = displayio.Group()
 display.root_group = splash
 
-digital_label = label.Label(
-    terminalio.FONT, text="Battery Percent: ", color=0xFFFFFF, x=4, y=4
-)
+digital_label = label.Label(terminalio.FONT, text="Battery Percent: ", color=0xFFFFFF, x=4, y=4)
 splash.append(digital_label)
 alarm_label = label.Label(terminalio.FONT, text="Voltage: ", color=0xFFFFFF, x=4, y=14)
 splash.append(alarm_label)

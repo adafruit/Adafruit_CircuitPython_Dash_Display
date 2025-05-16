@@ -2,13 +2,13 @@
 # SPDX-License-Identifier: MIT
 
 from os import getenv
+
+import adafruit_connection_manager
+import adafruit_minimqtt.adafruit_minimqtt as MQTT
 import board
 import busio
-import adafruit_connection_manager
-from adafruit_esp32spi import adafruit_esp32spi
-from adafruit_esp32spi import adafruit_esp32spi_wifimanager
 import neopixel
-import adafruit_minimqtt.adafruit_minimqtt as MQTT
+from adafruit_esp32spi import adafruit_esp32spi, adafruit_esp32spi_wifimanager
 from adafruit_io.adafruit_io import IO_MQTT
 from digitalio import DigitalInOut
 
@@ -52,27 +52,22 @@ status_pixel = neopixel.NeoPixel(board.NEOPIXEL, 1, brightness=0.2)
 # BLUE_LED = PWMOut.PWMOut(esp, 25)
 # status_pixel = adafruit_rgbled.RGBLED(RED_LED, BLUE_LED, GREEN_LED)
 
-wifi = adafruit_esp32spi_wifimanager.WiFiManager(
-    esp, ssid, password, status_pixel=status_pixel
-)
+wifi = adafruit_esp32spi_wifimanager.WiFiManager(esp, ssid, password, status_pixel=status_pixel)
 
 
 # Define callback functions which will be called when certain events happen.
-# pylint: disable=unused-argument
 def connected(client):
     client.subscribe("neopixel")
 
 
 def subscribe(client, userdata, topic, granted_qos):
     # This method is called when the client subscribes to a new feed.
-    print("Subscribed to {0} with QOS level {1}".format(topic, granted_qos))
+    print(f"Subscribed to {topic} with QOS level {granted_qos}")
 
 
 def on_neopixel(client, topic, message):
     print(message)
-    colors = [
-        int(message.split("#")[1][i : i + 2], 16) for i in range(0, len(message) - 1, 2)
-    ]
+    colors = [int(message.split("#")[1][i : i + 2], 16) for i in range(0, len(message) - 1, 2)]
     print(colors)
     pixels.fill(colors)
 
