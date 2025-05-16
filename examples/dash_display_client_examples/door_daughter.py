@@ -2,16 +2,16 @@
 # SPDX-License-Identifier: MIT
 
 from os import getenv
+
+import adafruit_connection_manager
+import adafruit_minimqtt.adafruit_minimqtt as MQTT
 import board
 import busio
-import adafruit_connection_manager
-from adafruit_esp32spi import adafruit_esp32spi
-from adafruit_esp32spi import adafruit_esp32spi_wifimanager
 import neopixel
-import adafruit_minimqtt.adafruit_minimqtt as MQTT
+from adafruit_debouncer import Debouncer
+from adafruit_esp32spi import adafruit_esp32spi, adafruit_esp32spi_wifimanager
 from adafruit_io.adafruit_io import IO_MQTT
 from digitalio import DigitalInOut, Direction, Pull
-from adafruit_debouncer import Debouncer
 
 # Get WiFi details and Adafruit IO keys, ensure these are setup in settings.toml
 # (visit io.adafruit.com if you need to create an account, or if you need your Adafruit IO key.)
@@ -56,9 +56,7 @@ status_pixel = neopixel.NeoPixel(board.NEOPIXEL, 1, brightness=0.2)
 # BLUE_LED = PWMOut.PWMOut(esp, 25)
 # status_pixel = adafruit_rgbled.RGBLED(RED_LED, BLUE_LED, GREEN_LED)
 
-wifi = adafruit_esp32spi_wifimanager.WiFiManager(
-    esp, ssid, password, status_pixel=status_pixel
-)
+wifi = adafruit_esp32spi_wifimanager.WiFiManager(esp, ssid, password, status_pixel=status_pixel)
 
 # Connect to WiFi
 print("Connecting to WiFi...")

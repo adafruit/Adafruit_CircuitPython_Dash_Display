@@ -3,13 +3,15 @@
 
 import time
 from os import getenv
-import board
-from digitalio import DigitalInOut, Direction, Pull
-import touchio
-import wifi
+
 import adafruit_connection_manager
 import adafruit_minimqtt.adafruit_minimqtt as MQTT
+import board
+import touchio
+import wifi
 from adafruit_io.adafruit_io import IO_MQTT
+from digitalio import DigitalInOut, Direction, Pull
+
 from adafruit_dash_display import Hub
 
 up = DigitalInOut(board.BUTTON_UP)
@@ -59,7 +61,7 @@ io = IO_MQTT(mqtt_client)
 
 def pub_lamp(lamp):
     if isinstance(lamp, str):
-        lamp = eval(lamp)  # pylint: disable=eval-used
+        lamp = eval(lamp)
     iot.publish("lamp", str(not lamp))
     # funhouse.set_text(f"Lamp: {not lamp}", 0)
     time.sleep(0.3)
@@ -78,9 +80,7 @@ iot.add_device(
     default_text="Temperature: ",
     formatted_text="Temperature: {:.1f} C",
 )
-iot.add_device(
-    feed_key="humidity", default_text="Humidity: ", formatted_text="Humidity: {:.2f}%"
-)
+iot.add_device(feed_key="humidity", default_text="Humidity: ", formatted_text="Humidity: {:.2f}%")
 
 iot.get()
 

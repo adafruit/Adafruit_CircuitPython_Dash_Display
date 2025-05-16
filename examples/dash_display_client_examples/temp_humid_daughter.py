@@ -2,20 +2,19 @@
 # SPDX-License-Identifier: MIT
 
 from os import getenv
-import wifi
+
 import adafruit_connection_manager
 import adafruit_minimqtt.adafruit_minimqtt as MQTT
-from adafruit_io.adafruit_io import IO_MQTT
-
-from adafruit_magtag.magtag import MagTag
-import busio
-import board
 import adafruit_sht4x
+import board
+import busio
+import wifi
+from adafruit_io.adafruit_io import IO_MQTT
+from adafruit_magtag.magtag import MagTag
 
 # Add a settings.toml to your filesystem that has token variables "CIRCUITPY_WIFI_SSID" and
 # "CIRCUITPY_WIFI_PASSWORD" with your WiFi credentials. DO NOT share that file or commit it
 # into Git or other source control.
-# pylint: disable=no-name-in-module,wrong-import-order
 
 magtag = MagTag()
 

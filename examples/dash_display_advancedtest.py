@@ -3,16 +3,18 @@
 
 import time
 from os import getenv
-import displayio
+
+import adafruit_connection_manager
+import adafruit_minimqtt.adafruit_minimqtt as MQTT
 import board
-from digitalio import DigitalInOut, Direction, Pull
-from adafruit_display_text.label import Label
+import displayio
 import terminalio
 import touchio
 import wifi
-import adafruit_connection_manager
-import adafruit_minimqtt.adafruit_minimqtt as MQTT
+from adafruit_display_text.label import Label
 from adafruit_io.adafruit_io import IO_MQTT
+from digitalio import DigitalInOut, Direction, Pull
+
 from adafruit_dash_display import Hub
 
 up = DigitalInOut(board.BUTTON_UP)
@@ -93,8 +95,6 @@ rgb_group.append(R)
 rgb_group.append(G)
 rgb_group.append(B)
 
-# pylint: disable=unused-argument
-
 
 def rgb(last):
     display.root_group = None
@@ -131,7 +131,7 @@ def rgb(last):
             continue
 
         if submit.value:
-            color = ["{:02x}".format(colors[i]) for i in range(len(colors))]
+            color = [f"{colors[i]:02x}" for i in range(len(colors))]
             color = "#" + "".join(color)
             iot.publish("neopixel", color)
             break
@@ -144,15 +144,15 @@ def rgb(last):
     time.sleep(0.1)
 
 
-def rgb_set_color(message):  # pylint: disable=unused-argument
+def rgb_set_color(message):
     return int(message[1:], 16)
 
 
 def door_color(message):
     door = bool(int(message))
     if door:
-        return int(0x00FF00)
-    return int(0xFF0000)
+        return 0x00FF00
+    return 0xFF0000
 
 
 def on_door(client, feed_id, message):
@@ -164,7 +164,7 @@ def on_door(client, feed_id, message):
 
 def pub_lamp(lamp):
     if isinstance(lamp, str):
-        lamp = eval(lamp)  # pylint: disable=eval-used
+        lamp = eval(lamp)
     iot.publish("lamp", str(not lamp))
     # funhouse.set_text(f"Lamp: {not lamp}", 0)
     time.sleep(0.3)
@@ -205,9 +205,7 @@ iot.add_device(
     default_text="Temperature: ",
     formatted_text="Temperature: {:.1f} C",
 )
-iot.add_device(
-    feed_key="humidity", default_text="Humidity: ", formatted_text="Humidity: {:.2f}%"
-)
+iot.add_device(feed_key="humidity", default_text="Humidity: ", formatted_text="Humidity: {:.2f}%")
 iot.add_device(
     feed_key="neopixel",
     default_text="LED: ",

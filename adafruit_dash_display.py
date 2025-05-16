@@ -22,8 +22,10 @@ Implementation Notes
   https://github.com/adafruit/circuitpython/releases
 
 """
+
 try:
-    from typing import Tuple, Callable, Optional, Any
+    from typing import Any, Callable, Optional, Tuple
+
     from adafruit_io.adafruit_io import IO_MQTT
     from digitalio import DigitalInOut
 except ImportError:
@@ -31,6 +33,7 @@ except ImportError:
 
 import time
 from collections import OrderedDict
+
 import displayio
 import terminalio
 from adafruit_display_shapes.rect import Rect
@@ -62,7 +65,7 @@ class Feed:
         color: Optional[int],
         pub: Optional[Callable],
         index: int,
-    ):  # pylint: disable=too-many-arguments
+    ):
         self._key = key
         self.default_text = default_text
         self._text = formatted_text
@@ -149,7 +152,7 @@ class Feed:
         self._last_val = value
 
 
-class Hub:  # pylint: disable=too-many-instance-attributes
+class Hub:
     """
     Object that lets you make an IOT dashboard
 
@@ -193,7 +196,6 @@ class Hub:  # pylint: disable=too-many-instance-attributes
         self.display.root_group = self.splash
 
     def simple_text_callback(
-        # pylint: disable=unused-argument
         self,
         client: IO_MQTT,
         feed_id: str,
@@ -239,7 +241,7 @@ class Hub:  # pylint: disable=too-many-instance-attributes
         color_callback: Optional[int] = None,
         callback: Optional[Callable] = None,
         pub_method: Optional[Callable] = None,
-    ):  # pylint: disable=too-many-arguments
+    ):
         """Adds a feed/device to the UI
 
         :param feed_key: The Adafruit IO feed key.
@@ -305,7 +307,6 @@ class Hub:  # pylint: disable=too-many-instance-attributes
             time.sleep(0.1)
         self.io_mqtt.loop()
 
-    # pylint: disable=unused-argument
     @staticmethod
     def connected(client: IO_MQTT) -> None:
         """Callback for when the device is connected to Adafruit IO
