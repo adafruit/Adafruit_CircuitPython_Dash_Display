@@ -17,6 +17,7 @@ from adafruit_esp32spi import adafruit_esp32spi, adafruit_esp32spi_wifimanager
 from adafruit_io.adafruit_io import IO_MQTT
 from adafruit_lc709203f import LC709203F
 from digitalio import DigitalInOut
+from i2cdisplaybus import I2CDisplayBus
 
 displayio.release_displays()
 
@@ -104,7 +105,7 @@ io.on_message = message
 print("Connecting to Adafruit IO...")
 io.connect()
 
-display_bus = displayio.I2CDisplay(board.I2C(), device_address=0x3C)
+display_bus = I2CDisplayBus(board.I2C(), device_address=0x3C)
 
 WIDTH = 128
 HEIGHT = 32
