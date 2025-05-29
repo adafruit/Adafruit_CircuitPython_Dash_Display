@@ -26,6 +26,7 @@ Implementation Notes
 try:
     from typing import Any, Callable, Optional, Tuple
 
+    import busdisplay
     from adafruit_io.adafruit_io import IO_MQTT
     from digitalio import DigitalInOut
 except ImportError:
@@ -156,14 +157,14 @@ class Hub:
     """
     Object that lets you make an IOT dashboard
 
-    :param displayio.Display display: The display for the dashboard.
+    :param busdisplay.BusDisplay display: The display for the dashboard.
     :param IO_MQTT io_mqtt: MQTT communications object.
     :param Tuple[DigitalInOut, ...] nav: The navigation pushbuttons.
     """
 
     def __init__(
         self,
-        display: displayio.Display,
+        display: busdisplay.BusDisplay,
         io_mqtt: IO_MQTT,
         nav: Tuple[DigitalInOut, ...],
     ):
