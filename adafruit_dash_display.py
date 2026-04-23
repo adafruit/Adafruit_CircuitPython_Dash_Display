@@ -210,7 +210,7 @@ class Hub:
         :param str message: The text to display.
         :return: A string with data formatted into it.
         """
-        feed_id = feed_id.split("/")[-1]
+        feed_id = feed_id.rsplit("/", maxsplit=1)[-1]
         feed = self.feeds[feed_id]
         try:
             text = feed.text.format(message)
@@ -260,7 +260,7 @@ class Hub:
             pub_method = self.base_pub
         if not formatted_text:
             formatted_text = f"{feed_key} : "
-            formatted_text = formatted_text + "{}"
+            formatted_text += "{}"
         if not default_text:
             default_text = feed_key
 
@@ -343,7 +343,7 @@ class Hub:
         :param str message: The message received.
         """
         print(f"Feed {feed_id} received new value: {message}")
-        feed_id = feed_id.split("/")[-1]
+        feed_id = feed_id.rsplit("/", maxsplit=1)[-1]
         feed = self.feeds[feed_id]
         feed.last_val = message
         self.update_text(client, feed_id, str(message))

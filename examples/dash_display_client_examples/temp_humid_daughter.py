@@ -86,8 +86,8 @@ try:
     )
 
     temperature, relative_humidity = sht.measurements
-    magtag.set_text("Temperature: %0.1f C" % temperature, 0, False)
-    magtag.set_text("Humidity: %0.1f %%" % relative_humidity, 1, False)
+    magtag.set_text(f"Temperature: {temperature:0.1f} C", 0, False)
+    magtag.set_text(f"Humidity: {relative_humidity:0.1f} %", 1, False)
     T = temperature * 1.8 + 32
     humidity = relative_humidity
     HI = (
@@ -101,7 +101,7 @@ try:
         + 0.00085282 * T * humidity**2
         - 0.00000199 * T * T * humidity**2
     )
-    magtag.set_text("Feels like: %0.1f F" % HI, 2)
+    magtag.set_text(f"Feels like: {HI:0.1f} F", 2)
     io.publish("temperature", temperature)
     io.publish("humidity", relative_humidity)
     io.publish("heatindex", HI)
@@ -134,6 +134,6 @@ except ConnectionError:
     )
 
     temperature, relative_humidity = sht.measurements
-    magtag.set_text("Temperature: %0.1f C" % temperature, 0, False)
-    magtag.set_text("Humidity: %0.1f %%" % relative_humidity, 1)
+    magtag.set_text(f"Temperature: {temperature:0.1f} C", 0, False)
+    magtag.set_text(f"Humidity: {relative_humidity:0.1f} %", 1)
     magtag.exit_and_deep_sleep(300)
